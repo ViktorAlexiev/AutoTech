@@ -1,3 +1,5 @@
+https://docs.djangoproject.com/en/5.0/
 https://dev.to/nagatodev/how-to-connect-django-to-reactjs-1a71
 https://stackoverflow.com/questions/73587019/i-cant-use-create-react-app-this-is-related-to-npm-not-being-able-to-find-a
 https://www.youtube.com/watch?v=fBA-jaWab9k
+https://m2.material.io/design/color/dark-theme.html
