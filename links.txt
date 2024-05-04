@@ -1,0 +1,2 @@
+https://dev.to/nagatodev/how-to-connect-django-to-reactjs-1a71
+https://stackoverflow.com/questions/73587019/i-cant-use-create-react-app-this-is-related-to-npm-not-being-able-to-find-a
