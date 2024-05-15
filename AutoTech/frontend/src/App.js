@@ -1,15 +1,32 @@
-import './App.css';
+import React from "react";
+import Navbar from "./Navbar"
+import Statistics from "./subpages/Statistics";
+import NewCard from "./subpages/NewCard";
+import Search from "./subpages/Search";
+
+import './style.css';
 
 function App() {
-  return (
-    <div className="App">
-       <div class="navbar">
-        <button class="btn" href="newForm">Нова работна карта</button>
-        <button class="btn" href="searchForm">Търсене на работна карта</button>
-        <a class="link" href="login">Изход</a>
-      </div> 
-    </div>
-  );
+  let Component
+  switch(window.location.pathname){
+    case "/statistics":
+      Component = Statistics;
+      break;
+    case "/newCard":
+      Component = NewCard;
+      break;
+    case "/search":
+      Component = Search;
+      break;
+  }
+  return  (
+    <>
+      <Navbar />
+      <Component />
+    </>
+  )
+  
+
 }
 
 export default App;
