@@ -7,3 +7,7 @@ https://www.w3schools.com/howto/howto_js_tabs.asp
 https://www.npmjs.com/package/react-helmet
 https://www.youtube.com/watch?v=CVAFbJtDS4o
 https://www.youtube.com/watch?v=SLfhMt5OUPI&list=LL&index=6
+https://www.geeksforgeeks.org/raw-sql-queries-in-django-views/
+https://stackoverflow.com/questions/61165419/how-can-i-see-data-from-an-already-made-mysql-database-on-django
+https://django-mysql.readthedocs.io/en/latest/model_fields/resizable_text_binary_fields.html#django_mysql.models.SizedTextFiel
+https://www.geeksforgeeks.org/datetimefield-django-models/#field-options
