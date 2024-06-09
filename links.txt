@@ -11,3 +11,7 @@ https://www.geeksforgeeks.org/raw-sql-queries-in-django-views/
 https://stackoverflow.com/questions/61165419/how-can-i-see-data-from-an-already-made-mysql-database-on-django
 https://django-mysql.readthedocs.io/en/latest/model_fields/resizable_text_binary_fields.html#django_mysql.models.SizedTextFiel
 https://www.geeksforgeeks.org/datetimefield-django-models/#field-options
+https://www.youtube.com/watch?v=mOu9fpfzyUg
+https://www.youtube.com/watch?v=PD3YnPSHC-c&list=TLPQMDYwNjIwMjTC7uh5WsY6Ew&index=3
+https://docs.djangoproject.com/en/5.0/howto/legacy-databases/
+https://www.youtube.com/watch?v=uYTiPwEGKyQ
