@@ -10,7 +10,8 @@ from django.db import models
 
 
 class b_data(models.Model):
-    RK = models.IntegerField(db_column='RK', blank=True, primary_key=True)  # Field name made lowercase.
+    id = models.BigAutoField(primary_key=True)
+    RK = models.IntegerField(db_column='RK', blank=True, null=False)  # Field name made lowercase.
     RN = models.CharField(db_column='RN', max_length=255, blank=True, null=True)  # Field name made lowercase.
     Marka = models.CharField(db_column='Marka', max_length=255, blank=True, null=True)  # Field name made lowercase.
     Model = models.CharField(db_column='Model', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -29,7 +30,8 @@ class b_data(models.Model):
 
 
 class c_data(models.Model):
-    RK = models.IntegerField(db_column='RK', blank=True, primary_key=True)  # Field name made lowercase.
+    id = models.BigAutoField(primary_key=True)
+    RK = models.IntegerField(db_column='RK', blank=True, null=False)  # Field name made lowercase.
     ime = models.CharField(max_length=255, blank=True, null=True)
     telefon = models.CharField(max_length=255, blank=True, null=True)
 
@@ -38,7 +40,8 @@ class c_data(models.Model):
         db_table = 'c_data'
 
 class p_data(models.Model):
-    RK = models.IntegerField(db_column='RK', blank=True, primary_key=True)  # Field name made lowercase.
+    id = models.BigAutoField(primary_key=True)
+    RK = models.IntegerField(db_column='RK', blank=True, null=False)  # Field name made lowercase.
     W_ID = models.IntegerField(db_column='W_ID', blank=True, null=True)  # Field name made lowercase.
     PART = models.CharField(db_column='PART', max_length=255, blank=True, null=True)  # Field name made lowercase.
     PRICE = models.IntegerField(db_column='PRICE', blank=True, null=True)  # Field name made lowercase.
@@ -49,7 +52,8 @@ class p_data(models.Model):
 
 
 class w_data(models.Model):
-    RK = models.IntegerField(db_column='RK', blank=True, primary_key=True)  # Field name made lowercase.
+    id = models.BigAutoField(primary_key=True)
+    RK = models.IntegerField(db_column='RK', blank=True, null=False)  # Field name made lowercase.
     W_ID = models.IntegerField(db_column='W_ID', blank=True, null=True)  # Field name made lowercase.
     WORK = models.TextField(db_column='WORK', blank=True, null=True)  # Field name made lowercase.
     PRICE = models.IntegerField(db_column='PRICE', blank=True, null=True)  # Field name made lowercase.
