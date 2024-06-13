@@ -1,9 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create new card</title>
+</head>
 <body>
-
-<h1>Hello World!</h1>
-<p>Welcome to my first Django project!</p>
-
+    <div class = "enter_data">
+        <form action = "" method="POST">{% csrf_token %}
+            <div class = "base">
+                <h2>Базови данни</h2>
+                <input type="number" class="field" placeholder="Enter RK" value = {{RK}} name="RK">
+                <input type="text" class="field" placeholder="Enter RN" value = {{RN}} name="RN">
+                <input type="text" class="field" placeholder="Enter Marka" value = {{Marka}} name="Marka">
+                <input type="text" class="field" placeholder="Enter Model" value = {{Model}} name="Model">
+                <input type="number" class="field" placeholder="Enter G_PR" value = {{G_PR}} name="G_PR">
+                <input type="number" class="field" placeholder="Enter KM" value = {{KM}} name="KM">
+                <input type="text" class="field" placeholder="Enter Kupe" value = {{Kupe}} name="Kupe">
+                <input type="text" class="field" placeholder="Enter Rama" value = {{Rama}} name="Rama">
+                <input type="text" class="field" placeholder="Enter Dvigatel" value = {{Dvigatel}} name="Dvigatel">
+                <textarea class="field" placeholder="Enter Descr" name="Descr">{{Descr}}</textarea>
+                <textarea class="field" placeholder="Enter Problem" name="Problem">{{Problem}}</textarea>
+                <input type="date" class="field" placeholder="Enter R_DATA" value = {{R_DATA}} name="R_DATA">
+            </div>
+            <div class = "client">
+                <h2>Данни за клиента</h2>
+                <input type="text" class="field" placeholder="Enter ime" value = {{ime}} name="ime">
+                <input type="text" class="field" placeholder="Enter telefon" value = {{telefon}} name="telefon">
+            </div>
+            <button type = "submit" class = "btn">Add card</button>
+        </form>
+    </div>
+    <div class = "control_btns">
+        <button >&lt;&lt;</button>
+        <button >&lt;</button>
+        <button >&gt;</button>
+        <button >&gt;&gt;</button>
+    </div>
 </body>
 </html>

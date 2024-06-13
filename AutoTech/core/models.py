@@ -22,7 +22,7 @@ class b_data(models.Model):
     Dvigatel = models.CharField(db_column='Dvigatel', max_length=255, blank=True, null=True)  # Field name made lowercase.
     Descr = models.TextField(db_column='Descr', blank=True, null=True)  # Field name made lowercase.
     Problem = models.TextField(db_column='Problem', blank=True, null=True)  # Field name made lowercase.
-    R_DATA = models.DateTimeField(db_column='R_DATA', blank=True, null=True)  # Field name made lowercase.
+    R_DATA = models.DateField(db_column='R_DATA', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = True
