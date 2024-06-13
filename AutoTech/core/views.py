@@ -28,10 +28,10 @@ def statistics(response):
 def card(request):
     cur_rk = 0
     q1 = "SELECT MIN(RK) AS L_RK FROM B_DATA;"
-    
     with connection.cursor() as cursor:
         cursor.execute(q1)
-        cur_rk = cursor.fetchall()
+        val = cursor.fetchall()
+        cur_rk = val[0][0]
     
     if request.method == 'POST':
         RK = request.POST['RK']
@@ -87,9 +87,6 @@ def card(request):
             cdata = cursor.fetchall()
             #print(cdata)
             
-        
-        date = bdata[0][12]
-        real_date = bdata[0][12].strftime("%m/%d/%Y")
         default_box_values = {
             'RK': bdata[0][1],
             'RN': bdata[0][2],
@@ -102,13 +99,30 @@ def card(request):
             'Dvigatel': bdata[0][9],
             'Descr': bdata[0][10],
             'Problem': bdata[0][11],
-            'R_DATA': real_date,
+            'R_DATA': bdata[0][12],
             'ime': cdata[0][2],
             'telefon': cdata[0][3],
         }
         return default_box_values
+    
+    if request.method == 'GET':
+        if request.GET.get('C', '') == '1':
+            q1 = "SELECT MAX(RK) AS L_RK FROM B_DATA;"
+            with connection.cursor() as cursor:
+                cursor.execute(q1)
+                val = cursor.fetchall()
+                cur_rk = val[0][0]
+        
+        elif request.GET.get('C', '') == '0':
+            q1 = "SELECT MIN(RK) AS L_RK FROM B_DATA;"
+            with connection.cursor() as cursor:
+                cursor.execute(q1)
+                val = cursor.fetchall()
+                cur_rk = val[0][0]
             
-    return render(request, "card.html", get_db_data(cur_rk[0][0]))
+    context = get_db_data(cur_rk)
+    print(cur_rk, context)
+    return render(request, "card.html", context)
 
 
 def search(response):

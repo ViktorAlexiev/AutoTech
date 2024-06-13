@@ -32,10 +32,19 @@
         </form>
     </div>
     <div class = "control_btns">
-        <button >&lt;&lt;</button>
-        <button >&lt;</button>
-        <button >&gt;</button>
-        <button >&gt;&gt;</button>
+        <button id="first" onclick="getData(0)">&lt;&lt;</button>
+        <button id="previous" onclick="getData(2)">&lt;</button>
+        <button id="next" onclick="getData(3)">&gt;</button>
+        <button id="last" onclick="getData(1)">&gt;&gt;</button>
     </div>
+    <script>
+        function getData(card) {
+            let url = 'http://127.0.0.1:8000/card/?C=' + card.toString();
+            fetch(url);
+        }
+        function greet() {
+            console.log('Hey there clicker!');
+        }
+    </script> 
 </body>
 </html>
