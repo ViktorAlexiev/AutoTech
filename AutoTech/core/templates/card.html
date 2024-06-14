@@ -28,22 +28,24 @@
                 <input type="text" class="field" placeholder="Enter ime" value = {{ime}} name="ime">
                 <input type="text" class="field" placeholder="Enter telefon" value = {{telefon}} name="telefon">
             </div>
-            <button type = "submit" class = "btn">Add card</button>
+            <button type = "submit" class = "btn">Submit</button>
         </form>
     </div>
     <div class = "control_btns">
-        <button id="first" onclick="getData(0)">&lt;&lt;</button>
-        <button id="previous" onclick="getData(2)">&lt;</button>
-        <button id="next" onclick="getData(3)">&gt;</button>
-        <button id="last" onclick="getData(1)">&gt;&gt;</button>
+        <button id="first" onclick="getData(-1)">&lt;&lt;</button>
+        <button id="previous" onclick="getData(-2)">&lt;</button>
+        <button id="next" onclick="getData(-3)">&gt;</button>
+        <button id="last" onclick="getData(-4)">&gt;&gt;</button>
+        <button onclick="getData(0)">Add new card</button>
     </div>
     <script>
         function getData(card) {
             let url = 'http://127.0.0.1:8000/card/?C=' + card.toString();
             fetch(url);
+            //setTimeout(refr(), 10);
         }
-        function greet() {
-            console.log('Hey there clicker!');
+        function refr() {
+            location.reload();
         }
     </script> 
 </body>
