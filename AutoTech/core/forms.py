@@ -1,4 +1,5 @@
 from django.forms import ModelForm
+from django import forms
 from .models import *
 
 class b_dataForm(ModelForm):
@@ -21,7 +22,7 @@ class b_dataForm(ModelForm):
             'Dvigatel': 'Двигател',
             'Descr': 'Описание на автомобила',
             'Problem': 'Проблем на автомобила',
-            'R_DATA': 'Текуща дата',
+            'R_DATA': 'Дата на издаване',
             # Add all fields here
         }
         for field_name, field in self.fields.items():
@@ -46,6 +47,12 @@ class c_dataForm(ModelForm):
             field.required = True
             if field_name in custom_labels:
                 field.label = custom_labels[field_name]
+                
+class searchForm(forms.Form):
+    RN = forms.CharField(max_length=255, required=False, label="Регистрационен номер")
+    ime = forms.CharField(max_length=255, required=False, label="Име на клиента")
+    date1 = forms.DateField(required=False, label="От дата1")
+    date2 = forms.DateField(required=False, label="До дата2")
                 
 class w_dataForm(ModelForm):
     class Meta:

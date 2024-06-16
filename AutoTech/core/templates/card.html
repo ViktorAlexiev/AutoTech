@@ -3,29 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create new card</title>
+    <title>Cards</title>
 </head>
 <body>
-    <div class = "enter_data">
+    <div class = "data_form">
         <form method="POST"> 
             {% csrf_token %} 
             <h2>Данни за автомобила</h2>
             {{ b_form.as_p }} 
             <h2>Данни за клиента</h2>
             {{ c_form.as_p }} 
-            <input type="submit" value="Submit"> 
-        </form> 
+            <input type="submit" value="Добавяне на новата сервизна карта или редактиране на старата"> 
+        </form>
     </div>
+    
     <div class = "control_btns">
         <button id="first" onclick="getData(-1)">&lt;&lt;</button>
         <button id="previous" onclick="getData(-2)">&lt;</button>
         <button id="next" onclick="getData(-3)">&gt;</button>
         <button id="last" onclick="getData(-4)">&gt;&gt;</button>
-        <button onclick="getData(0)">Add new card</button>
+        <button onclick="getData(0)">Създаване на сервизна карта</button>
     </div>
+
+    <div class = "search_form">
+        <form method="GET"> 
+            <h2>Търсене на работна карта</h2>
+            {{ search_form.as_p }} 
+            <button type="submit" formaction="/cards/searches">Търсене на сервизни карти</button>
+        </form>
+    </div>
+    <a href='/'>Назад към статистиките</a>
     <script>
         function getData(card) {
-            let url = 'http://127.0.0.1:8000/card/?C=' + card.toString();
+            let url = 'http://127.0.0.1:8000/cards/?C=' + card.toString();
             fetch(url);
             refr();
         }
@@ -38,6 +48,6 @@
             await delay(100);
             window.location.reload();
         }
-    </script> 
+    </script>
 </body>
 </html>

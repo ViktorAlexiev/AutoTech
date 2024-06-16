@@ -24,7 +24,7 @@ def statistics(response):
         L_RK = cursor.fetchall()
         cursor.execute(q2)
         M_C = cursor.fetchall()
-    return render(response, "statistics.html", {'q1': L_RK, 'q2': M_C})
+    return render(response, "statistics.html", {'q1': L_RK[0][0], 'q2': M_C[0][0]})
 
 def card(request):
     context = {}
@@ -33,18 +33,19 @@ def card(request):
     
     
     def get_min_rk():
-        q1 = "SELECT MIN(RK) AS L_RK FROM B_DATA;"
+        q = "SELECT MIN(RK) AS L_RK FROM B_DATA;"
         with connection.cursor() as cursor:
-            cursor.execute(q1)
+            cursor.execute(q)
             val = cursor.fetchall()
         return val[0][0]
     
     def get_max_rk():
-        q1 = "SELECT MAX(RK) AS L_RK FROM B_DATA;"
+        q = "SELECT MAX(RK) AS L_RK FROM B_DATA;"
         with connection.cursor() as cursor:
-            cursor.execute(q1)
+            cursor.execute(q)
             val = cursor.fetchall()
         return val[0][0]
+    
     
     def get_db_data(rk):
         q1 = "SELECT * FROM B_DATA WHERE RK = "
@@ -170,42 +171,160 @@ def card(request):
             b = b_data.objects.filter(RK=cur_rk).first()
             c = c_data.objects.filter(RK=cur_rk).first()
             
-    #context = get_db_data(cur_rk)
     
     if request.method == 'GET':
         if request.GET.get('C', '') == '-1':
             cur_rk = get_min_rk()
-            #context = get_db_data(cur_rk)
                 
         elif request.GET.get('C', '') == '-2':
             if cur_rk > get_min_rk():
                 cur_rk -= 1
-                #context = get_db_data(cur_rk)
             
         elif request.GET.get('C', '') == '-3':
             if cur_rk < get_max_rk():
                 cur_rk += 1
-                #context = get_db_data(cur_rk)
                 
         elif request.GET.get('C', '') == '-4':
             cur_rk = get_max_rk()
-            #context = get_db_data(cur_rk)
         
         elif request.GET.get('C', '') == '0':
             newest_rk = get_max_rk()+1
             cur_rk =  newest_rk
-            #context = get_db_data(cur_rk)
             
         
     
     request.session['cur_rk'] = cur_rk
     initial_b, initial_c = get_db_data(cur_rk)
     b_form = b_dataForm(request.POST or None, initial = initial_b) 
-    c_form = c_dataForm(request.POST or None, initial = initial_c)  
+    c_form = c_dataForm(request.POST or None, initial = initial_c) 
+    search_form = searchForm(None) 
     context['b_form'] = b_form
     context['c_form'] = c_form
+    context['search_form'] = search_form
     return render(request, "card.html", context)
 
 
-def search(response):
-	return render(response, "search.html", {})
+def search(request):
+    
+    def create_full_table():
+        q = "CREATE TABLE fulltable AS SELECT B_DATA.RK, B_DATA.RN, B_DATA.Marka, B_DATA.Model, B_DATA.G_PR, B_DATA.KM, B_DATA.Kupe, B_DATA.Rama, B_DATA.Dvigatel, B_DATA.R_DATA, B_DATA.Descr, B_DATA.Problem,"
+        q += " C_DATA.ime, C_DATA.telefon"
+        q += " FROM B_DATA INNER JOIN C_DATA ON B_DATA.RK = C_DATA.RK"
+        q += " ORDER BY B_DATA.RK;"
+        with connection.cursor() as cursor:
+            cursor.execute(q)
+            #full_table = cursor.fetchall()
+            
+    def drop_table(table):
+        q = "DROP TABLE "
+        q += table
+        with connection.cursor() as cursor:
+            cursor.execute(q)
+            #res = cursor.fetchall()
+            
+            
+    if request.method == 'GET':
+        get_RN = request.GET.get('RN', '')
+        get_ime = request.GET.get('ime', '')
+        get_date1 = request.GET.get('date1', '')
+        get_date2 = request.GET.get('date2', '')
+        json_data = []
+        where_clause = ""
+        flag = 0
+        try:
+            drop_table('fulltable')
+        except:
+            pass
+        if get_RN != '' or get_ime != '' or get_date1 != '' or get_date2 != '':
+            where_clause+=" WHERE"
+            if get_RN != '':
+                flag+=1
+            if get_ime != '':
+                flag+=1
+            if get_date1 != '':
+                flag+=1
+            if get_date2 != '':
+                flag+=1
+                
+            if flag>0:
+                
+                if get_RN != '' and flag>=2:
+                    where_clause+=" RN="
+                    where_clause+=' "'
+                    where_clause+=get_RN
+                    where_clause+='"'
+                    where_clause+=" AND "
+                    flag-=1
+                    
+                elif get_RN != '':
+                    where_clause+=" RN="
+                    where_clause+=' "'
+                    where_clause+=get_RN
+                    where_clause+='"'
+                    print("=====================================================")
+                    print(where_clause)
+                
+                if get_ime != '' and flag>=2:
+                    where_clause+=" ime="
+                    where_clause+=' "'
+                    where_clause+=get_ime
+                    where_clause+='"'
+                    where_clause+=" AND "
+                    flag-=1
+                elif get_ime != '':
+                    where_clause+=" ime="
+                    where_clause+=' "'
+                    where_clause+=get_ime
+                    where_clause+='"'
+                    flag-=1
+                    print("=====================================================")
+                    print(where_clause)
+                    
+                if get_date1 != '' and flag>=2:
+                    where_clause+=" R_DATA="
+                    where_clause+=' "'
+                    where_clause+=get_date1
+                    where_clause+='"'
+                    where_clause+=" AND "
+                    flag-=1
+                elif get_date1 != '':
+                    where_clause+=" R_DATA="
+                    where_clause+=' "'
+                    where_clause+=get_date1
+                    where_clause+='"'
+                    flag-=1
+                    print("=====================================================")
+                    print(where_clause)
+                    
+                """"if get_date2 != '' and flag>=2:
+                    where_clause+=" date2="
+                    where_clause+=' "'
+                    where_clause+=get_date2
+                    where_clause+='"'
+                    where_clause+=" AND "
+                    flag-=1
+                else:
+                    where_clause+=get_date2"""
+
+                    
+            q = "CREATE TABLE fulltable AS SELECT B_DATA.RK, B_DATA.RN, B_DATA.Marka, B_DATA.Model, B_DATA.G_PR, B_DATA.KM, B_DATA.Kupe, B_DATA.Rama, B_DATA.Dvigatel, B_DATA.R_DATA, B_DATA.Descr, B_DATA.Problem,"
+            q += " C_DATA.ime, C_DATA.telefon"
+            q += " FROM B_DATA" 
+            q += " INNER JOIN C_DATA ON B_DATA.RK = C_DATA.RK"
+            q += where_clause
+            q += " ORDER BY B_DATA.RK;"
+            with connection.cursor() as cursor:
+                cursor.execute(q)
+        else:
+            create_full_table()
+            
+            
+            
+        q = "SELECT * FROM fulltable"
+        with connection.cursor() as cursor:
+            cursor.execute(q)
+            table = cursor.fetchall()
+            print(table)
+                
+        
+    return render(request, "search.html", {})
