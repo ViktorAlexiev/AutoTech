@@ -28,7 +28,6 @@ def statistics(response):
 
 def card(request):
     context = {}
-    #del request.session['cur_rk']
     cur_rk = request.session.get('cur_rk', 1)
     
     
@@ -133,9 +132,11 @@ def card(request):
             Descr = b_form.cleaned_data['Descr']
             Problem = b_form.cleaned_data['Problem']
             R_DATA = b_form.cleaned_data['R_DATA']
-            
             ime = c_form.cleaned_data['ime']
             telefon = c_form.cleaned_data['telefon']
+            print("VALLIDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
+        else:
+            print("invaliddddddddddddddddddddddddddddd")
         
         
         if cur_rk > get_max_rk():
@@ -166,6 +167,7 @@ def card(request):
                 new_c_data.save()
             except:
                 pass
+            
         else:
             print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSEEE")
             b = b_data.objects.filter(RK=cur_rk).first()
@@ -205,6 +207,7 @@ def card(request):
 
 
 def search(request):
+    context={}
     
     def create_full_table():
         q = "CREATE TABLE fulltable AS SELECT B_DATA.RK, B_DATA.RN, B_DATA.Marka, B_DATA.Model, B_DATA.G_PR, B_DATA.KM, B_DATA.Kupe, B_DATA.Rama, B_DATA.Dvigatel, B_DATA.R_DATA, B_DATA.Descr, B_DATA.Problem,"
@@ -228,7 +231,6 @@ def search(request):
         get_ime = request.GET.get('ime', '')
         get_date1 = request.GET.get('date1', '')
         get_date2 = request.GET.get('date2', '')
-        json_data = []
         where_clause = ""
         flag = 0
         try:
@@ -279,32 +281,53 @@ def search(request):
                     flag-=1
                     print("=====================================================")
                     print(where_clause)
-                    
-                if get_date1 != '' and flag>=2:
-                    where_clause+=" R_DATA="
-                    where_clause+=' "'
+                if get_date1!='' and get_date2=='':
+                    if get_date1 != '' and flag>=2:
+                        where_clause+=" R_DATA="
+                        where_clause+=' "'
+                        where_clause+=get_date1
+                        where_clause+='"'
+                        where_clause+=" AND "
+                        flag-=1
+                    elif get_date1 != '':
+                        where_clause+=" R_DATA="
+                        where_clause+=' "'
+                        where_clause+=get_date1
+                        where_clause+='"'
+                        flag-=1
+                        print("=====================================================")
+                        print(where_clause)
+                elif get_date1=='' and get_date2!='':
+                    if get_date2 != '' and flag>=2:
+                        where_clause+=" R_DATA="
+                        where_clause+=' "'
+                        where_clause+=get_date2
+                        where_clause+='"'
+                        where_clause+=" AND "
+                        flag-=1
+                    elif get_date2 != '':
+                        where_clause+=" R_DATA="
+                        where_clause+=' "'
+                        where_clause+=get_date2
+                        where_clause+='"'
+                        flag-=1
+                        print("=====================================================")
+                        print(where_clause)
+                elif get_date1!='' and get_date2!='':
+                    where_clause+=" R_DATA>="
+                    where_clause+='"'
                     where_clause+=get_date1
                     where_clause+='"'
                     where_clause+=" AND "
                     flag-=1
-                elif get_date1 != '':
-                    where_clause+=" R_DATA="
-                    where_clause+=' "'
-                    where_clause+=get_date1
+                    where_clause+=" R_DATA<="
+                    where_clause+='"'
+                    where_clause+=get_date2
                     where_clause+='"'
                     flag-=1
                     print("=====================================================")
                     print(where_clause)
                     
-                """"if get_date2 != '' and flag>=2:
-                    where_clause+=" date2="
-                    where_clause+=' "'
-                    where_clause+=get_date2
-                    where_clause+='"'
-                    where_clause+=" AND "
-                    flag-=1
-                else:
-                    where_clause+=get_date2"""
 
                     
             q = "CREATE TABLE fulltable AS SELECT B_DATA.RK, B_DATA.RN, B_DATA.Marka, B_DATA.Model, B_DATA.G_PR, B_DATA.KM, B_DATA.Kupe, B_DATA.Rama, B_DATA.Dvigatel, B_DATA.R_DATA, B_DATA.Descr, B_DATA.Problem,"
@@ -324,7 +347,18 @@ def search(request):
         with connection.cursor() as cursor:
             cursor.execute(q)
             table = cursor.fetchall()
-            print(table)
-                
+            
+        my_keys = ['RK', 'RN', 'Marka', 'Model', 'G_PR', 'KM', 'Kupe', 'Rama', 'Dvigatel', 'Descr', 'Problem', 'R_DATA', 'ime', 'telefon']
+        table_data = []
+        object_c=len(table)
+        cols = 14
         
-    return render(request, "search.html", {})
+        for i in range(object_c):
+            my_json = {'RK': '', 'RN': '', 'Marka': '', 'Model': '', 'G_PR': '', 'KM': '', 'Kupe': '', 'Rama': '', 'Dvigatel': '', 'Descr': '', 'Problem': '', 'R_DATA': '', 'ime': '', 'telefon': ''}
+            for j in range(cols):
+                my_json[my_keys[j]] = table[i][j]
+            table_data.append(my_json)
+                
+    context['table_data'] = table_data
+    print(context)
+    return render(request, "search.html", context)
