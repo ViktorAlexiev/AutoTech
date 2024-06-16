@@ -22,5 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.statistics, name="statistics"),
     path("card/", views.card, name="card"),
-    path("search/", views.search, name="search"),
+    path("card/search/", views.search, name="search"),
 ]

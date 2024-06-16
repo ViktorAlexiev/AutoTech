@@ -7,6 +7,7 @@ from datetime import datetime
 from django.http import JsonResponse
 import json
 import datetime 
+from .forms import *
 # Create your views here.
 
 def statistics(response):
@@ -26,49 +27,24 @@ def statistics(response):
     return render(response, "statistics.html", {'q1': L_RK, 'q2': M_C})
 
 def card(request):
-    cur_rk = request.session.get('cur_rk', 2)
+    context = {}
+    #del request.session['cur_rk']
+    cur_rk = request.session.get('cur_rk', 1)
     
-    if request.method == 'POST':
-        RK = request.POST['RK']
-        RN = request.POST['RN']
-        Marka = request.POST['Marka']
-        Model = request.POST['Model']
-        G_PR = request.POST['G_PR']
-        KM = request.POST['KM']
-        Kupe = request.POST['Kupe']
-        Rama = request.POST['Rama']
-        Dvigatel = request.POST['Dvigatel']
-        Descr = request.POST['Descr']
-        Problem = request.POST['Problem']
-        R_DATA = request.POST['R_DATA']
-        
-        new_b_data = b_data(
-            RK=RK,
-            RN=RN,
-            Marka=Marka,
-            Model=Model,
-            G_PR=G_PR,
-            KM=KM,
-            Kupe=Kupe,
-            Rama=Rama,
-            Dvigatel=Dvigatel,
-            Descr=Descr,
-            Problem=Problem,
-            R_DATA=R_DATA,
-        )
-        
-        ime = request.POST['ime']
-        telefon = request.POST['telefon']
-        
-        new_c_data = c_data(
-            RK=RK,
-            ime=ime,
-            telefon=telefon,
-        )
-        
-        new_b_data.save()
-        new_c_data.save()
-        
+    
+    def get_min_rk():
+        q1 = "SELECT MIN(RK) AS L_RK FROM B_DATA;"
+        with connection.cursor() as cursor:
+            cursor.execute(q1)
+            val = cursor.fetchall()
+        return val[0][0]
+    
+    def get_max_rk():
+        q1 = "SELECT MAX(RK) AS L_RK FROM B_DATA;"
+        with connection.cursor() as cursor:
+            cursor.execute(q1)
+            val = cursor.fetchall()
+        return val[0][0]
     
     def get_db_data(rk):
         q1 = "SELECT * FROM B_DATA WHERE RK = "
@@ -83,7 +59,7 @@ def card(request):
             cdata = cursor.fetchall()
             #print(cdata)
         try:
-            default_box_values = {
+            default_b_values = {
                 'RK': bdata[0][1],
                 'RN': bdata[0][2],
                 'Marka': bdata[0][3],
@@ -96,12 +72,14 @@ def card(request):
                 'Descr': bdata[0][10],
                 'Problem': bdata[0][11],
                 'R_DATA': bdata[0][12],
+            }
+            default_c_values = {
                 'ime': cdata[0][2],
                 'telefon': cdata[0][3],
             }
             
         except:
-            default_box_values = {
+            default_b_values = {
                 'RK': rk,
                 'RN': None,
                 'Marka': None,
@@ -113,79 +91,119 @@ def card(request):
                 'Dvigatel': None,
                 'Descr': None,
                 'Problem': None,
-                'R_DATA': None,
+                'R_DATA': None,             
+            }
+            default_c_values = {
                 'ime': None,
                 'telefon': None,
             }
-        return default_box_values
+        return default_b_values, default_c_values
     
     
     
-    def get_empty_card():
-        q1 = "SELECT MAX(RK) AS L_RK FROM B_DATA;"
-        with connection.cursor() as cursor:
-            cursor.execute(q1)
-            val = cursor.fetchall()
-            latest_card = val[0][0]
-            newest_card = latest_card+1
+    if request.method == 'POST':
+        '''RK = request.POST['RK']
+        RN = request.POST['RN']
+        Marka = request.POST['Marka']
+        Model = request.POST['Model']
+        G_PR = request.POST['G_PR']
+        KM = request.POST['KM']
+        Kupe = request.POST['Kupe']
+        Rama = request.POST['Rama']
+        Dvigatel = request.POST['Dvigatel']
+        Descr = request.POST['Descr']
+        Problem = request.POST['Problem']
+        R_DATA = request.POST['R_DATA']
+        ime = request.POST['ime']
+        telefon = request.POST['telefon']'''
+        
+        b_form = b_dataForm(request.POST)
+        c_form = c_dataForm(request.POST)
+        if b_form.is_valid() and c_form.is_valid():
+            RK = b_form.cleaned_data['RK']
+            RN = b_form.cleaned_data['RN']
+            Marka = b_form.cleaned_data['Marka']
+            Model = b_form.cleaned_data['Model']
+            G_PR = b_form.cleaned_data['G_PR']
+            KM = b_form.cleaned_data['KM']
+            Kupe = b_form.cleaned_data['Kupe']
+            Rama = b_form.cleaned_data['Rama']
+            Dvigatel = b_form.cleaned_data['Dvigatel']
+            Descr = b_form.cleaned_data['Descr']
+            Problem = b_form.cleaned_data['Problem']
+            R_DATA = b_form.cleaned_data['R_DATA']
             
-        empty_box_values = {
-            'RK': newest_card,
-            'RN': '',
-            'Marka': '',
-            'Model': '',
-            'G_PR': '',
-            'KM': '',
-            'Kupe': '',
-            'Rama': '',
-            'Dvigatel': '',
-            'Descr': '',
-            'Problem': '',
-            'R_DATA': '',
-            'ime': '',
-            'telefon': '',
-        }
-        return empty_box_values
-    
-    context = get_db_data(cur_rk)
+            ime = c_form.cleaned_data['ime']
+            telefon = c_form.cleaned_data['telefon']
+        
+        
+        if cur_rk > get_max_rk():
+            try:
+                print("createEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+            
+                new_b_data = b_data(
+                    RK=RK,
+                    RN=RN,
+                    Marka=Marka,
+                    Model=Model,
+                    G_PR=G_PR,
+                    KM=KM,
+                    Kupe=Kupe,
+                    Rama=Rama,
+                    Dvigatel=Dvigatel,
+                    Descr=Descr,
+                    Problem=Problem,
+                    R_DATA=R_DATA,
+                )
+                new_c_data = c_data(
+                    RK=RK,
+                    ime=ime,
+                    telefon=telefon,
+                )
+                
+                new_b_data.save()
+                new_c_data.save()
+            except:
+                pass
+        else:
+            print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSEEE")
+            b = b_data.objects.filter(RK=cur_rk).first()
+            c = c_data.objects.filter(RK=cur_rk).first()
+            
+    #context = get_db_data(cur_rk)
     
     if request.method == 'GET':
         if request.GET.get('C', '') == '-1':
-            q1 = "SELECT MIN(RK) AS L_RK FROM B_DATA;"
-            with connection.cursor() as cursor:
-                cursor.execute(q1)
-                val = cursor.fetchall()
-                cur_rk = val[0][0]
-            context = get_db_data(cur_rk)
+            cur_rk = get_min_rk()
+            #context = get_db_data(cur_rk)
                 
         elif request.GET.get('C', '') == '-2':
-            cur_rk -= 1
-            context = get_db_data(cur_rk)
+            if cur_rk > get_min_rk():
+                cur_rk -= 1
+                #context = get_db_data(cur_rk)
             
         elif request.GET.get('C', '') == '-3':
-            cur_rk += 1
-            context = get_db_data(cur_rk)
+            if cur_rk < get_max_rk():
+                cur_rk += 1
+                #context = get_db_data(cur_rk)
                 
         elif request.GET.get('C', '') == '-4':
-            q1 = "SELECT MAX(RK) AS L_RK FROM B_DATA;"
-            with connection.cursor() as cursor:
-                cursor.execute(q1)
-                val = cursor.fetchall()
-                cur_rk = val[0][0]
-            context = get_db_data(cur_rk)
+            cur_rk = get_max_rk()
+            #context = get_db_data(cur_rk)
         
         elif request.GET.get('C', '') == '0':
-            q1 = "SELECT MAX(RK) AS L_RK FROM B_DATA;"
-            with connection.cursor() as cursor:
-                cursor.execute(q1)
-                latest_rk = cursor.fetchall()
-            newest_rk = latest_rk[0][0]+1
-            cur_rk=  newest_rk
-            context = get_db_data(cur_rk)
+            newest_rk = get_max_rk()+1
+            cur_rk =  newest_rk
+            #context = get_db_data(cur_rk)
             
         
-        
+    
     request.session['cur_rk'] = cur_rk
+    initial_b, initial_c = get_db_data(cur_rk)
+    b_form = b_dataForm(request.POST or None, initial = initial_b) 
+    c_form = c_dataForm(request.POST or None, initial = initial_c)  
+    context['b_form'] = b_form
+    context['c_form'] = c_form
     return render(request, "card.html", context)
 
 
