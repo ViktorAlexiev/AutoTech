@@ -36,7 +36,7 @@ def card(request):
         with connection.cursor() as cursor:
             cursor.execute(q)
             val = cursor.fetchall()
-        return val[0][0]
+        return val[0][0] 
     
     def get_max_rk():
         q = "SELECT MAX(RK) AS L_RK FROM B_DATA;"
