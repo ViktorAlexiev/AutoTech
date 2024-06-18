@@ -10,7 +10,7 @@ class b_dataForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(b_dataForm, self).__init__(*args, **kwargs)
         custom_labels = {
-            'RK': 'Номер на работна карта',
+            'RK': 'Номер на сервизна карта',
             'RN': 'Регистрационен номер',
             'Marka': 'Марка',
             'Model': 'Модел',
