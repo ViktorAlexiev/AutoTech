@@ -11,41 +11,64 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
 </head>
 <body>
-    <div class="container">
-    <table id="table" data-height="460">
-        <thead>
-            <tr>
-                <th data-field="RK">номер на работна карта</th>
-                <th data-field="ime">Име на клиента</th>
-                <th data-field="telefon">Телефон за връзка</th>
-                <th data-field="RN">Регистрационен номер</th>
-                <th data-field="Marka">Марка</th>
-                <th data-field="Model">Модел</th>
-                <th data-field="G_PR">Година на производство</th>
-                <th data-field="KM">Изминати километри</th>
-                <th data-field="Kupe">Купе</th>
-                <th data-field="Rama">Рама</th>
-                <th data-field="Dvigatel">Двигател</th>
-                <th data-field="Descr">Описание на автомобила</th>
-                <th data-field="Problem">Проблем</th>
-                <th data-field="R_DATA">Дата на издаване</th>
-            </tr>
-        </thead>
-    </table>
-    </div>
-    <a href='/'>Назад към статистиките</a><br></br>
-    <a href='/cards'>Назад към разглеждането на сервизни карти</a>
-    <button onclick="log()">Създаване на сервизна карта</button>
+    <center>
+    <div class="container" style="width: 1000px;">
+        <table id="table"  data-height="460">
+            <thead>
+                <tr>
+                    <th data-field="RK">номер на работна карта</th>
+                    <th data-field="ime">Име на клиента</th>
+                    <th data-field="telefon">Телефон за връзка</th>
+                    <th data-field="RN">Регистрационен номер</th>
+                    <th data-field="Marka">Марка</th>
+                    <th data-field="Model">Модел</th>
+                    <th data-field="G_PR">Година на производство</th>
+                    <th data-field="KM">Изминати километри</th>
+                    <th data-field="Kupe">Купе</th>
+                    <th data-field="Rama">Рама</th>
+                    <th data-field="Dvigatel">Двигател</th>
+                    <th data-field="Descr">Описание на автомобила</th>
+                    <th data-field="Problem">Проблем</th>
+                    <th data-field="R_DATA">Дата на издаване</th>
+                </tr>
+            </thead>
+        </table>
+        </div>
+        <a href='/'>Назад към статистиките</a><br></br>
+        <a href='/cards'>Назад към разглеждането на сервизни карти</a>
+    </center>
 
     <script type="text/javascript">
         var $table = $('#table');
         var myData = "{{ table_data|safe }}";
+        var betterJSON = myData.replace(/'/g, '"');
+
+        let regex = /datetime\.date\((\d{4}), (\d{1,2}), (\d{1,2})\)/g;
+        let fixedJsonString = betterJSON.replace(regex, function(match, year, month, day) {
+            let dateObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day)+1);
+            return `"${dateObj.toISOString().slice(0, 10)}"`;
+        });
+
+        parsedData = JSON.parse(fixedJsonString);
+
+        parsedData.forEach(obj => {
+            let temp = obj.Descr;
+            obj.Descr = obj.R_DATA;
+            obj.R_DATA = temp;
+        });
+        
+        parsedData.forEach(obj => {
+            let temp = obj.Problem;
+            obj.Problem = obj.Descr;
+            obj.Descr = temp;
+        });
+
         function log() {
-            console.log(myData);
+            console.log(betterJSON);
         }
         $(function () {
             $('#table').bootstrapTable({
-                data: myData
+                data: parsedData
             });
         });
     </script>

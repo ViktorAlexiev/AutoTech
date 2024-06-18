@@ -32,3 +32,4 @@ https://docs.djangoproject.com/en/5.0/topics/forms/modelforms/
 https://www.geeksforgeeks.org/initial-form-data-django-forms/
 https://www.geeksforgeeks.org/how-to-delay-a-javascript-function-call-using-javascript/#using-promises-and-asyncawait
 https://www.geeksforgeeks.org/how-to-load-data-from-json-into-a-bootstrap-table/
+https://github.com/afshinm/Json-to-HTML-Table
