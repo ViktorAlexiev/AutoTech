@@ -16,9 +16,11 @@ https://www.youtube.com/watch?v=PD3YnPSHC-c&list=TLPQMDYwNjIwMjTC7uh5WsY6Ew&inde
 https://docs.djangoproject.com/en/5.0/howto/legacy-databases/
 https://www.youtube.com/watch?v=uYTiPwEGKyQ
 
+
 https://www.digitalocean.com/community/tutorials/react-axios-react
 https://studygyaan.com/django/how-to-get-post-request-values-in-django
 https://codedamn.com/news/reactjs/axios-network-requests
+
 
 https://hylianhero1997.medium.com/how-to-load-html-in-django-a9040305c972
 https://www.techwithtim.net/tutorials/django/html-templates
