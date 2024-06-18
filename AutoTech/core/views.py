@@ -102,20 +102,6 @@ def card(request):
     
     
     if request.method == 'POST':
-        '''RK = request.POST['RK']
-        RN = request.POST['RN']
-        Marka = request.POST['Marka']
-        Model = request.POST['Model']
-        G_PR = request.POST['G_PR']
-        KM = request.POST['KM']
-        Kupe = request.POST['Kupe']
-        Rama = request.POST['Rama']
-        Dvigatel = request.POST['Dvigatel']
-        Descr = request.POST['Descr']
-        Problem = request.POST['Problem']
-        R_DATA = request.POST['R_DATA']
-        ime = request.POST['ime']
-        telefon = request.POST['telefon']'''
         
         b_form = b_dataForm(request.POST)
         c_form = c_dataForm(request.POST)
@@ -165,13 +151,30 @@ def card(request):
                 
                 new_b_data.save()
                 new_c_data.save()
+                return HttpResponse("<h2>Запазването на новата карта беше успешно</h2><br></br><a href='/cards'>Обратно към разглеждането на сервизни карти</a>", status=201)
             except:
                 pass
-            
         else:
             print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSEEE")
             b = b_data.objects.filter(RK=cur_rk).first()
             c = c_data.objects.filter(RK=cur_rk).first()
+            b.RN = RN
+            b.Marka = Marka
+            b.Model = Model
+            b.G_PR = G_PR
+            b.KM = KM
+            b.Kupe = Kupe
+            b.Rama = Rama
+            b.Dvigatel = Dvigatel
+            b.Descr = Descr
+            b.Problem = Problem
+            b.R_DATA = R_DATA
+            c.ime = ime
+            c.telefon = telefon
+            b.save()
+            c.save()           
+            
+            return HttpResponse("<h2>Редактирането на сервизната карта беше успешно</h2><br></br><a href='/cards'>Обратно към разглеждането на сервизни карти</a>", status=200)
             
     
     if request.method == 'GET':
@@ -231,13 +234,17 @@ def search(request):
         get_ime = request.GET.get('ime', '')
         get_date1 = request.GET.get('date1', '')
         get_date2 = request.GET.get('date2', '')
+        get_order = request.GET.get('O', '')
+        get_sort = request.GET.get('S', '')
         where_clause = ""
+        order_clause = ""
+        sort_clause = ""
         flag = 0
         try:
             drop_table('fulltable')
         except:
             pass
-        if get_RN != '' or get_ime != '' or get_date1 != '' or get_date2 != '':
+        if get_RN != '' or get_ime != '' or get_date1 != '' or get_date2 != '' or get_order != '' or get_date1 != '' or get_date2 != '':
             where_clause+=" WHERE"
             if get_RN != '':
                 flag+=1
@@ -335,11 +342,29 @@ def search(request):
             q += " FROM B_DATA" 
             q += " INNER JOIN C_DATA ON B_DATA.RK = C_DATA.RK"
             q += where_clause
-            q += " ORDER BY B_DATA.RK;"
+            
+            
             with connection.cursor() as cursor:
                 cursor.execute(q)
         else:
-            create_full_table()
+            q = "CREATE TABLE fulltable AS SELECT B_DATA.RK, B_DATA.RN, B_DATA.Marka, B_DATA.Model, B_DATA.G_PR, B_DATA.KM, B_DATA.Kupe, B_DATA.Rama, B_DATA.Dvigatel, B_DATA.R_DATA, B_DATA.Descr, B_DATA.Problem,"
+            q += " C_DATA.ime, C_DATA.telefon"
+            q += " FROM B_DATA" 
+            q += " INNER JOIN C_DATA ON B_DATA.RK = C_DATA.RK"
+            
+        if get_order != 2:
+            order_clause = " ORDER BY B_DATA.RK "
+        else:
+            order_clause = " ORDER BY B_DATA.R_DATA "
+        q += order_clause
+        if get_sort == 'ASC' or get_sort == 'DESC':
+            sort_clause += get_sort
+            sort_clause+=';'
+        else:
+            sort_clause=';'
+        q += sort_clause
+        with connection.cursor() as cursor:
+            cursor.execute(q)
             
             
             
@@ -360,5 +385,5 @@ def search(request):
             table_data.append(my_json)
                 
     context['table_data'] = table_data
-    print(context)
+    #print(context)
     return render(request, "search.html", context)

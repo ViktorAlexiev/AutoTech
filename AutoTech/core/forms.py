@@ -9,7 +9,6 @@ class b_dataForm(ModelForm):
         
     def __init__(self, *args, **kwargs):
         super(b_dataForm, self).__init__(*args, **kwargs)
-        # Dictionary mapping field names to their custom labels
         custom_labels = {
             'RK': 'Номер на работна карта',
             'RN': 'Регистрационен номер',
@@ -23,12 +22,12 @@ class b_dataForm(ModelForm):
             'Descr': 'Описание на автомобила',
             'Problem': 'Проблем на автомобила',
             'R_DATA': 'Дата на издаване',
-            # Add all fields here
         }
         for field_name, field in self.fields.items():
             field.required = True
             if field_name in custom_labels:
                 field.label = custom_labels[field_name]
+            self.fields['RK'].widget.attrs['readonly'] = True
         
 class c_dataForm(ModelForm):
     class Meta:
@@ -37,11 +36,9 @@ class c_dataForm(ModelForm):
     
     def __init__(self, *args, **kwargs):
         super(c_dataForm, self).__init__(*args, **kwargs)
-        # Dictionary mapping field names to their custom labels
         custom_labels = {
             'ime': 'Име на клиента',
             'telefon': 'Телефон за връзка',
-            # Add all fields here
         }
         for field_name, field in self.fields.items():
             field.required = True

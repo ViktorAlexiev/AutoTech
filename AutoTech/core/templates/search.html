@@ -29,10 +29,23 @@
                     <th data-field="Dvigatel">Двигател</th>
                     <th data-field="Descr">Описание на автомобила</th>
                     <th data-field="Problem">Проблем</th>
-                    <th data-field="R_DATA">Дата на издаване</th>
+                    <th data-field="R_DATA">Дата на издаване на сервизната карта</th>
                 </tr>
             </thead>
         </table>
+        </div>
+        <div class="dropdown">
+            <select id="ordering" name="ordering">
+                <option value="" disabled selected>Сортиране по</option>
+                <option value=1>Сервизна карта</option>
+                <option value=2>Дата</option>
+            </select>
+            <select id="sorting" name="sorting">
+                <option value="" disabled selected>Сортиране по ред</option>
+                <option value="ASC">Възходящ</option>
+                <option value="DESC">Низходящ</option>
+            </select>
+            <button onclick="fetchSort()">Сортиране</button>
         </div>
         <a href='/'>Назад към статистиките</a><br></br>
         <a href='/cards'>Назад към разглеждането на сервизни карти</a>
@@ -62,6 +75,17 @@
             obj.Problem = obj.Descr;
             obj.Descr = temp;
         });
+        
+        function fetchSort() {
+            let url = new URL(window.location.href);
+            let params = new URLSearchParams(url.search);
+        
+            params.set("O", document.getElementById("ordering").value);
+            params.set("S", document.getElementById("sorting").value);
+        
+            url.search = params.toString();
+            window.location.href = url.toString();
+        }
 
         function log() {
             console.log(betterJSON);
@@ -71,6 +95,8 @@
                 data: parsedData
             });
         });
+
+        
     </script>
 </body>
 </html>
