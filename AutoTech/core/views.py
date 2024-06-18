@@ -211,15 +211,6 @@ def card(request):
 
 def search(request):
     context={}
-    
-    def create_full_table():
-        q = "CREATE TABLE fulltable AS SELECT B_DATA.RK, B_DATA.RN, B_DATA.Marka, B_DATA.Model, B_DATA.G_PR, B_DATA.KM, B_DATA.Kupe, B_DATA.Rama, B_DATA.Dvigatel, B_DATA.R_DATA, B_DATA.Descr, B_DATA.Problem,"
-        q += " C_DATA.ime, C_DATA.telefon"
-        q += " FROM B_DATA INNER JOIN C_DATA ON B_DATA.RK = C_DATA.RK"
-        q += " ORDER BY B_DATA.RK;"
-        with connection.cursor() as cursor:
-            cursor.execute(q)
-            #full_table = cursor.fetchall()
             
     def drop_table(table):
         q = "DROP TABLE "
@@ -343,9 +334,6 @@ def search(request):
             q += " INNER JOIN C_DATA ON B_DATA.RK = C_DATA.RK"
             q += where_clause
             
-            
-            with connection.cursor() as cursor:
-                cursor.execute(q)
         else:
             q = "CREATE TABLE fulltable AS SELECT B_DATA.RK, B_DATA.RN, B_DATA.Marka, B_DATA.Model, B_DATA.G_PR, B_DATA.KM, B_DATA.Kupe, B_DATA.Rama, B_DATA.Dvigatel, B_DATA.R_DATA, B_DATA.Descr, B_DATA.Problem,"
             q += " C_DATA.ime, C_DATA.telefon"
